@@ -70,7 +70,7 @@ class Sheep {
     });
     if (this.followingLeader) {
       if (!this.followingLeader.destination) this.followingLeader = null;
-      else if (Math.random() < this.followingLeader.members / 1000) {
+      else if (Math.random() < (this.followingLeader.members * this.followingLeader.members) / 1000) {
         this.followingLeader.members--;
         this.followingLeader = null;
       }

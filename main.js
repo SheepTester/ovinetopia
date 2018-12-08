@@ -18,20 +18,23 @@ let freedSheep = 0;
 let frame = 0;
 function paint(actuallyPaint) {
   frame++;
-  if (frame % 60 === 0) new Sheep(0, 0, sheep.length);
-  if (frame === 60) {
-    elems.freeSheep.classList.remove('hidden');
-  }
   if (actuallyPaint) c.clearRect(-cwidth / 2, -cheight / 2, cwidth, cheight);
   moveSheep();
   if (actuallyPaint) {
     drawSheep();
     animateRipples();
-    const actualSheep = sheep.filter(s => !s.floating);
-    elems.sheepCount.textContent = actualSheep.length + ' sheep';
-    elems.freeSheep.disabled = !actualSheep.length;
   }
 }
+function tick() {
+  new Sheep(0, 0, sheep.length);
+  if (elems.freeSheep.classList.contains('hidden'))
+    elems.freeSheep.classList.remove('hidden');
+  const actualSheep = sheep.filter(s => !s.floating);
+  document.title = actualSheep.length + ' sheep - Ovinetopia';
+  elems.sheepCount.textContent = actualSheep.length + ' sheep';
+  elems.freeSheep.disabled = !actualSheep.length;
+}
+setInterval(tick, 1000);
 
 const elems = {};
 function initElems() {
