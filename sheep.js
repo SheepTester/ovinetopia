@@ -18,16 +18,27 @@ class Sheep {
     this.members = 0;
     this.ignoreMe = false;
     this.floating = false;
+    this.sheep = true;
+    this.stationary = false;
+  }
+
+  onScreen() {
+    return this.x - SHEEP_SIZE < cwidth / 2 && -cwidth / 2 < this.x + SHEEP_SIZE
+      && this.y - SHEEP_SIZE < cheight / 2 && -cheight / 2 < this.y + SHEEP_SIZE * 1.5;
   }
 
   drawSheep(context) {
-    context.moveTo(this.x + SHEEP_SIZE, this.y + this.z);
-    context.arc(this.x, this.y + this.z, SHEEP_SIZE, 0, FULL_CIRCLE);
+    if (this.onScreen()) {
+      context.moveTo(this.x + SHEEP_SIZE, this.y + this.z);
+      context.arc(this.x, this.y + this.z, SHEEP_SIZE, 0, FULL_CIRCLE);
+    }
   }
 
   drawShadow(context) {
-    context.moveTo(this.x + SHEEP_SIZE, this.y + SHEEP_SIZE);
-    context.ellipse(this.x, this.y + SHEEP_SIZE, SHEEP_SIZE, SHEEP_SIZE / 2, 0, 0, FULL_CIRCLE);
+    if (this.onScreen()) {
+      context.moveTo(this.x + SHEEP_SIZE, this.y + SHEEP_SIZE);
+      context.ellipse(this.x, this.y + SHEEP_SIZE, SHEEP_SIZE, SHEEP_SIZE / 2, 0, 0, FULL_CIRCLE);
+    }
   }
 
   headTo(x, y) {
@@ -41,7 +52,7 @@ class Sheep {
 
   move() {
     if (this.noCheck) this.noCheck = false;
-    else sheep.find(shep => {
+    else if (!this.stationary) sheep.find(shep => {
       if (shep === this || shep.ignoreMe) return;
       const dx = shep.x - this.x;
       const dy = shep.y - this.y;
@@ -59,7 +70,7 @@ class Sheep {
         this.x -= Math.cos(angle) * (SHEEP_SIZE * 2 - dist + 1e-5);
         this.y -= Math.sin(angle) * (SHEEP_SIZE * 2 - dist + 1e-5);
         return true;
-      } else if (dx * dx + dy * dy < 64 * SHEEP_SIZE * SHEEP_SIZE) {
+      } else if (this.sheep && dx * dx + dy * dy < 64 * SHEEP_SIZE * SHEEP_SIZE) {
         const leader = shep.followingLeader || (shep.destination ? shep : null);
         if (leader && !this.followingLeader && !this.members && Math.random() < (leader.members + 1) / 100) {
           this.followingLeader = leader;
@@ -68,20 +79,22 @@ class Sheep {
         }
       }
     });
-    if (this.followingLeader) {
-      if (!this.followingLeader.destination) this.followingLeader = null;
-      else if (Math.random() < (this.followingLeader.members * this.followingLeader.members) / 1000) {
-        this.followingLeader.members--;
-        this.followingLeader = null;
-      }
-      else {
-        this.headTo(this.followingLeader.destination.x, this.followingLeader.destination.y);
-      }
-    } else if (this.destination) {
+    if (this.destination) {
       this.headTo(this.destination.x, this.destination.y);
-    } else if (Math.random() < 0.01) {
-      this.destination = {x: Math.random() * 200 - 100 + this.x, y: Math.random() * 200 - 100 + this.y};
-      this.members = 0;
+    } else if (this.sheep) {
+      if (this.followingLeader) {
+        if (!this.followingLeader.destination) this.followingLeader = null;
+        else if (Math.random() < (this.followingLeader.members * this.followingLeader.members) / 1000) {
+          this.followingLeader.members--;
+          this.followingLeader = null;
+        }
+        else {
+          this.headTo(this.followingLeader.destination.x, this.followingLeader.destination.y);
+        }
+      } else if (Math.random() < 0.01) {
+        this.destination = {x: Math.random() * 200 - 100 + this.x, y: Math.random() * 200 - 100 + this.y};
+        this.members = 0;
+      }
     }
     if (this.floating) {
       if (this.z < -1000) return this.remove();
@@ -93,7 +106,7 @@ class Sheep {
     if (this.z > 0) this.z = 0, this.zv *= -0.5;
     this.xv *= 0.9;
     this.yv *= 0.9;
-    if (this.destination) {
+    if (this.destination && this.sheep) {
       if (Math.abs(this.destination.x - this.x) < this.members + 1 && Math.abs(this.destination.y - this.y) < this.members + 1) {
         this.destination = null;
       }

@@ -29,7 +29,7 @@ function tick() {
   new Sheep(0, 0, sheep.length);
   if (elems.freeSheep.classList.contains('hidden'))
     elems.freeSheep.classList.remove('hidden');
-  const actualSheep = sheep.filter(s => !s.floating);
+  const actualSheep = sheep.filter(s => s.sheep && !s.floating);
   document.title = actualSheep.length + ' sheep - Ovinetopia';
   elems.sheepCount.textContent = actualSheep.length + ' sheep';
   elems.freeSheep.disabled = !actualSheep.length;
@@ -44,10 +44,12 @@ function initElems() {
   elems.freedSheepCount = document.getElementById('freed-sheep');
 
   elems.freeSheep.addEventListener('click', e => {
-    const actualSheep = sheep.filter(s => !s.floating);
+    const actualSheep = sheep.filter(s => s.sheep && !s.floating);
     actualSheep.forEach(s => s.free());
     freedSheep += actualSheep.length;
     elems.freedSheepCount.textContent = `${freedSheep} sheep freed.`;
+    document.title = '0 sheep - Ovinetopia';
+    elems.sheepCount.textContent = '0 sheep';
   });
 }
 
