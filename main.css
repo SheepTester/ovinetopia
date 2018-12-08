@@ -1,0 +1,13 @@
+html, body, .fullscreen {
+  width: 100%;
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-size: 0;
+  background-color: hsl(91, 58%, 58%);
+  background-image: url('./images/grass.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
