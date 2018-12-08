@@ -10,4 +10,103 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  font-family: 'Roboto Condensed', sans-serif;
+  color: white;
+}
+.text-shadow {
+  text-shadow: 0 0.05em rgba(0, 0, 0, 0.1);
+}
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px;
+  pointer-events: none;
+  transform-origin: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: -1;
+}
+.btn {
+  vertical-align: middle;
+  -webkit-appearance: none;
+  border: 1px solid white;
+  background: none;
+  border-radius: 5px;
+  font: inherit;
+  font-size: 14px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  word-wrap: break-word;
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: all .2s;
+}
+.btn:focus {
+  outline: none;
+}
+.btn:active {
+  box-shadow: 0 1px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+}
+.btn em {
+  font-style: normal;
+  text-decoration: underline;
+}
+:disabled {
+  opacity: 0.5;
+  cursor: default !important; /* reee */
+}
+.hidden {
+  display: none;
+}
+
+.ui {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.top-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.top-left p {
+  margin: 20px;
+}
+#sheep-count {
+  font-size: 50px;
+}
+#freed-sheep {
+  font-size: 16px;
+}
+.bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+}
+.middot {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
+  margin: 0 5px;
+}
+.bottom-right button {
+  color: white;
+  text-decoration: underline;
+  padding: 0;
+  border: none;
+  background: none;
+  -webkit-appearance: none;
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+.bottom-right a {
+  color: white;
+  font-size: 16px;
 }

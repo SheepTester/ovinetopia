@@ -5,13 +5,27 @@
     <meta charset="UTF-8">
     <meta name="description" content="An incremental game based on sheep"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
     <link rel="stylesheet" href="./main.css">
     <script src="./canvas-shit.js" charset="utf-8"></script>
     <script src="./input.js" charset="utf-8"></script>
+    <script src="./ripple.js" charset="utf-8"></script>
     <script src="./sheep.js" charset="utf-8"></script>
     <script src="./main.js" charset="utf-8"></script>
   </head>
   <body>
     <canvas class="fullscreen" id="sheep"></canvas>
+    <div class="ui fullscreen">
+      <div class="top-left">
+        <p class="text-shadow" id="sheep-count">0 sheep</p>
+        <p><button class="btn ripples hidden" data-key="f" id="free-sheep"><em>f</em>ree all sheep</button></p>
+        <p class="text-shadow" id="freed-sheep"></p>
+      </div>
+      <div class="bottom-right">
+        <a class="text-shadow" href="https://github.com/SheepTester/ovinetopia">source</a>
+        <span class="middot">&middot;</span>
+        <button class="text-shadow">no there's nothing else other than freeing sheep don't waste your time</button>
+      </div>
+    </div>
   </body>
 </html>

@@ -8,18 +8,21 @@ class Sheep {
     sheep.push(this);
     this.x = x;
     this.y = y;
-    this.xv = this.yv = 0;
+    this.z = 0;
+    this.xv = this.yv = this.zv = 0;
     this.name = name;
 
     this.noCheck = false;
     this.leader = null;
     this.destination = null;
     this.members = 0;
+    this.ignoreMe = false;
+    this.floating = false;
   }
 
   drawSheep(context) {
-    context.moveTo(this.x + SHEEP_SIZE, this.y);
-    context.arc(this.x, this.y, SHEEP_SIZE, 0, FULL_CIRCLE);
+    context.moveTo(this.x + SHEEP_SIZE, this.y + this.z);
+    context.arc(this.x, this.y + this.z, SHEEP_SIZE, 0, FULL_CIRCLE);
   }
 
   drawShadow(context) {
@@ -39,7 +42,7 @@ class Sheep {
   move() {
     if (this.noCheck) this.noCheck = false;
     else sheep.find(shep => {
-      if (shep === this) return;
+      if (shep === this || shep.ignoreMe) return;
       const dx = shep.x - this.x;
       const dy = shep.y - this.y;
       if (dx === 0 && dy === 0) {
@@ -80,8 +83,14 @@ class Sheep {
       this.destination = {x: Math.random() * 200 - 100 + this.x, y: Math.random() * 200 - 100 + this.y};
       this.members = 0;
     }
+    if (this.floating) {
+      if (this.z < -1000) return this.remove();
+      this.zv -= 0.5;
+    }
     this.x += this.xv;
     this.y += this.yv;
+    this.z += this.zv;
+    if (this.z > 0) this.z = 0, this.zv *= -0.5;
     this.xv *= 0.9;
     this.yv *= 0.9;
     if (this.destination) {
@@ -91,9 +100,15 @@ class Sheep {
     }
   }
 
+  free() {
+    this.ignoreMe = true;
+    this.floating = true;
+  }
+
   remove() {
     const index = sheep.indexOf(this);
     if (~index) sheep.splice(index, 1);
+    this.destination = null;
   }
 
 }

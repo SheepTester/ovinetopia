@@ -14,27 +14,52 @@ if (window.location.search) {
 
 const FULL_CIRCLE = 2 * Math.PI;
 
-let spawnSheep = true;
-
+let freedSheep = 0;
 let frame = 0;
-function paint() {
-  if (frame % 10 === 0 && spawnSheep) new Sheep(0, 0, sheep.length);
+function paint(actuallyPaint) {
   frame++;
-  c.clearRect(-cwidth / 2, -cheight / 2, cwidth, cheight);
+  if (frame % 60 === 0) new Sheep(0, 0, sheep.length);
+  if (frame === 60) {
+    elems.freeSheep.classList.remove('hidden');
+  }
+  if (actuallyPaint) c.clearRect(-cwidth / 2, -cheight / 2, cwidth, cheight);
   moveSheep();
-  drawSheep();
+  if (actuallyPaint) {
+    drawSheep();
+    animateRipples();
+    const actualSheep = sheep.filter(s => !s.floating);
+    elems.sheepCount.textContent = actualSheep.length + ' sheep';
+    elems.freeSheep.disabled = !actualSheep.length;
+  }
+}
+
+const elems = {};
+function initElems() {
+  elems.canvas = document.getElementById('sheep');
+  elems.sheepCount = document.getElementById('sheep-count');
+  elems.freeSheep = document.getElementById('free-sheep');
+  elems.freedSheepCount = document.getElementById('freed-sheep');
+
+  elems.freeSheep.addEventListener('click', e => {
+    const actualSheep = sheep.filter(s => !s.floating);
+    actualSheep.forEach(s => s.free());
+    freedSheep += actualSheep.length;
+    elems.freedSheepCount.textContent = `${freedSheep} sheep freed.`;
+  });
 }
 
 let pause;
 function init() {
+  initElems();
   initCanvas();
   initInput();
+  initRipples();
 
   let paused = false;
   let animID = null;
   function callPaint() {
     animID = window.requestAnimationFrame(callPaint);
-    paint();
+    paint(true);
   }
   callPaint();
   pause = () => {
